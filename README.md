@@ -10,7 +10,7 @@ Início do projeto: 22/04/2025
   
     1. Cadastro (registrar novo paciente, consultar paciente, mostrar lista completa, atualizar dados de um paciente e excluir dados de um paciente);
     2. Atendimento, fila comum (enfileira nomes dos pacientes, desenfileira e exibe a fila atual);
-    3. Atendimento, fila prioritária (possui as mesmas operações do item anterior, porém para pacientes com um mínimo de idade de 55 anos);
+    3. Atendimento, fila prioritária (possui as mesmas operações do item anterior, utilizando HEAP);
     4. Pesquisa (exibe registros ordenados por ano de registro; mês; dia; e idade);
     5. Desfazer (mostra o registro, uma espécie de log, das filas de atendimento; desfaz a última operação realizada para montagem da fila de atendimento; e informa ao usuário a operação a ser desfeita e envia, com o mesmo, uma solicitação de confirmação;
     6. Carregar/Salvar (lê um arquivo com os dados do paciente e carrega uma lista, salva arquivos com dados do paciente);
