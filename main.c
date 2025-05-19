@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h> //Usando para registrar data e horário atual nos arquivos txt
+
 
 //Estrutura dia, mês e ano na parte do cadastro:
 typedef struct {
@@ -142,9 +144,15 @@ void mostrarOperacoes() {
 
 //Função para salvar em arquivo txt os dados do paciente:
 void salvarPacientes() {
-    FILE* f = fopen("pacientes.txt", "w");
+    time_t agora = time(NULL);
+    struct tm* tm_info = localtime(&agora);
+
+    char nomeArquivo[100];
+    strftime(nomeArquivo, sizeof(nomeArquivo), "pacientes_%Y%m%d_%H%M%S.txt", tm_info);
+
+    FILE* f = fopen(nomeArquivo, "w");
     if (!f) {
-        printf("Erro ao abrir arquivo para escrita.\n");
+        printf("Erro ao criar o arquivo.\n");
         return;
     }
 
@@ -156,14 +164,20 @@ void salvarPacientes() {
     }
 
     fclose(f);
-    printf("Pacientes salvos com sucesso.\n");
+    printf("Pacientes salvos no arquivo: %s\n", nomeArquivo);
 }
 
 //Função para carregar na memória os dados paciente pelo arquivo txt criado:
 void carregarPacientes() {
-    FILE* f = fopen("pacientes.txt", "r");
+    char nomeArquivo[100];
+    printf("Digite o nome do arquivo a ser carregado no sistema: ");
+    fgets(nomeArquivo, sizeof(nomeArquivo), stdin);
+    //Remove o \n do final:
+    strtok(nomeArquivo, "\n"); 
+
+    FILE* f = fopen(nomeArquivo, "r");
     if (!f) {
-        printf("Arquivo de pacientes não encontrado.\n");
+        printf("Arquivo \"%s\" não encontrado.\n", nomeArquivo);
         return;
     }
 
@@ -179,6 +193,7 @@ void carregarPacientes() {
     fclose(f);
     printf("Pacientes carregados com sucesso.\n");
 }
+
 
 
 
@@ -374,7 +389,7 @@ void consultarPaciente() {
 
     Paciente* p = buscarPorRG(rg);
     if (p) {
-        printf("\nNome: %s\nIdade: %d\nRG: %s\nData de entrada: %02d/%02d/%04d\n",
+        printf("\nNome: %s\nIdade: %d\nRG: %s\nData de nascimento: %02d/%02d/%04d\n",
                p->nome, p->idade, p->rg, p->entrada.dia, p->entrada.mes, p->entrada.ano);
     } else {
         printf("Paciente nao encontrado.\n");
@@ -447,7 +462,7 @@ void listarPacientes() {
     }
 
     while (atual != NULL) {
-        printf("\nNome: %s\nIdade: %d\nRG: %s\nData de entrada: %02d/%02d/%04d\n",
+        printf("\nNome: %s\nIdade: %d\nRG: %s\nData de nascimento: %02d/%02d/%04d\n",
                atual->nome, atual->idade, atual->rg,
                atual->entrada.dia, atual->entrada.mes, atual->entrada.ano);
         atual = atual->proximo;
