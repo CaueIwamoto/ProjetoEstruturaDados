@@ -20,6 +20,128 @@ typedef struct Paciente {
 
 Paciente* lista = NULL;
 
+// =================== DECLARAÇÃO DE FUNÇÕES ===================== //
+Paciente* buscarPorRG(const char* rg);
+
+// =================== ESTRUTURA DE FILA ===================== //
+typedef struct NoFila {
+    Paciente* paciente;
+    struct NoFila* proximo;
+} NoFila;
+
+typedef struct {
+    NoFila* head;
+    NoFila* tail;
+} Fila;
+
+Fila filaAtendimento = {NULL, NULL};
+
+// =================== ESTRUTURA DE HEAP ===================== //
+#define MAX_HEAP 20
+Paciente* heap[MAX_HEAP];
+int tamanhoHeap = 0;
+
+void trocar(Paciente** a, Paciente** b) {
+    Paciente* temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void subirHeap(int idx) {
+    while (idx > 0) {
+        int pai = (idx - 1) / 2;
+        if (heap[idx]->idade > heap[pai]->idade) {
+            trocar(&heap[idx], &heap[pai]);
+            idx = pai;
+        } else break;
+    }
+}
+
+void descerHeap(int idx) {
+    int maior = idx;
+    int esq = 2 * idx + 1;
+    int dir = 2 * idx + 2;
+
+    if (esq < tamanhoHeap && heap[esq]->idade > heap[maior]->idade)
+        maior = esq;
+    if (dir < tamanhoHeap && heap[dir]->idade > heap[maior]->idade)
+        maior = dir;
+
+    if (maior != idx) {
+        trocar(&heap[idx], &heap[maior]);
+        descerHeap(maior);
+    }
+}
+
+void inserirPrioridade() {
+    if (tamanhoHeap >= MAX_HEAP) {
+        printf("Fila de prioridade cheia.\n");
+        return;
+    }
+
+    char rg[15];
+    printf("Informe o RG do paciente prioritario: ");
+    fgets(rg, 15, stdin);
+    strtok(rg, "\n");
+
+    Paciente* p = buscarPorRG(rg);
+    if (!p) {
+        printf("Paciente nao encontrado.\n");
+        return;
+    }
+
+    heap[tamanhoHeap] = p;
+    subirHeap(tamanhoHeap);
+    tamanhoHeap++;
+    printf("Paciente enfileirado com prioridade.\n");
+}
+
+void removerPrioridade() {
+    if (tamanhoHeap == 0) {
+        printf("Fila de prioridade vazia.\n");
+        return;
+    }
+
+    Paciente* p = heap[0];
+    printf("Paciente %s removido da fila prioritária.\n", p->nome);
+    heap[0] = heap[tamanhoHeap - 1];
+    tamanhoHeap--;
+    descerHeap(0);
+}
+
+void mostrarHeap() {
+    if (tamanhoHeap == 0) {
+        printf("Fila prioritária vazia.\n");
+        return;
+    }
+
+    for (int i = 0; i < tamanhoHeap; i++) {
+        printf("Nome: %s | Idade: %d | RG: %s\n", heap[i]->nome, heap[i]->idade, heap[i]->rg);
+    }
+}
+
+void menuPrioritario() {
+    int opcao;
+    do {
+        printf("\n--- Menu Atendimento Prioritário ---\n");
+        printf("1. Enfileirar paciente prioritário\n");
+        printf("2. Desenfileirar paciente prioritário\n");
+        printf("3. Mostrar fila prioritária\n");
+        printf("0. Voltar\n");
+        printf("Escolha: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+            case 1: inserirPrioridade(); break;
+            case 2: removerPrioridade(); break;
+            case 3: mostrarHeap(); break;
+            case 0: break;
+            default: printf("Opcao invalida.\n");
+        }
+    } while (opcao != 0);
+}
+
 // =================== FUNÇÕES DE LISTA (CADASTRO) ===================== //
 Paciente* criarPaciente() {
     Paciente* novo = (Paciente*) malloc(sizeof(Paciente));
@@ -177,12 +299,95 @@ void menuCadastro() {
     } while (opcao != 0);
 }
 
+void enfileirar(Fila* f, Paciente* paciente) {
+    NoFila* novo = (NoFila*) malloc(sizeof(NoFila));
+    novo->paciente = paciente;
+    novo->proximo = NULL;
+
+    if (f->tail != NULL)
+        f->tail->proximo = novo;
+    else
+        f->head = novo;
+
+    f->tail = novo;
+}
+
+void adicionarNaFila() {
+    char rg[15];
+    printf("Informe o RG do paciente a ser enfileirado: ");
+    fgets(rg, 15, stdin);
+    strtok(rg, "\n");
+
+    Paciente* p = buscarPorRG(rg);
+    if (p == NULL) {
+        printf("Paciente nao encontrado.\n");
+        return;
+    }
+
+    enfileirar(&filaAtendimento, p);
+    printf("Paciente enfileirado para atendimento.\n");
+}
+
+void desenfileirar(Fila* f) {
+    if (f->head == NULL) {
+        printf("Fila vazia.\n");
+        return;
+    }
+
+    NoFila* temp = f->head;
+    f->head = f->head->proximo;
+
+    if (f->head == NULL)
+        f->tail = NULL;
+
+    printf("Paciente %s desenfileirado.\n", temp->paciente->nome);
+    free(temp);
+}
+
+void mostrarFila(Fila* f) {
+    NoFila* atual = f->head;
+    if (atual == NULL) {
+        printf("Fila vazia.\n");
+        return;
+    }
+
+    while (atual != NULL) {
+        Paciente* p = atual->paciente;
+        printf("Nome: %s | Idade: %d | RG: %s\n", p->nome, p->idade, p->rg);
+        atual = atual->proximo;
+    }
+}
+
+void menuFila() {
+    int opcao;
+    do {
+        printf("\n--- Menu de Atendimento (Fila) ---\n");
+        printf("1. Enfileirar paciente\n");
+        printf("2. Desenfileirar paciente\n");
+        printf("3. Mostrar fila\n");
+        printf("0. Voltar ao menu principal\n");
+        printf("Escolha: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+            case 1: adicionarNaFila(); break;
+            case 2: desenfileirar(&filaAtendimento); break;
+            case 3: mostrarFila(&filaAtendimento); break;
+            case 0: break;
+            default: printf("Opcao invalida.\n");
+        }
+    } while (opcao != 0);
+}
+
 // =================== FUNÇÃO PRINCIPAL ===================== //
 int main() {
     int opcao;
     do {
         printf("\n=== Sistema de Atendimento Médico ===\n");
         printf("1. Cadastro de pacientes\n");
+        printf("2. Atendimento (fila comum)\n");
+        printf("3. Atendimento prioritario (heap)\n");
         printf("0. Sair\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
@@ -190,6 +395,8 @@ int main() {
 
         switch (opcao) {
             case 1: menuCadastro(); break;
+            case 2: menuFila(); break;
+            case 3: menuPrioritario(); break;
             case 0: printf("Encerrando o programa...\n"); break;
             default: printf("Opcao invalida!\n");
         }
