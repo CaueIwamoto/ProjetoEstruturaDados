@@ -1,2 +1,21 @@
 # ProjetoEstruturaDados
 Projeto da matéria Estrutura de Dados - FEI 2025
+
+Início do projeto: 22/04/2025
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**#Introdução:**
+  Este projeto será feito um simulador de um aplicativo para gerencimaneto de serviços de saúde em linguagem C. Neste aplicado será construído um menu com 7 itens, que são:
+    1. Cadastro (registrar novo paciente, consultar paciente, mostrar lista completa, atualizar dados de um paciente e excluir dados de um paciente);
+    2. Atendimento, fila comum (enfileira nomes dos pacientes, desenfileira e exibe a fila atual);
+    3. Atendimento, fila prioritária (possui as mesmas operações do item anterior, porém para pacientes com um mínimo de idade de 55 anos);
+    4. Pesquisa (exibe registros ordenados por ano de registro; mês; dia; e idade);
+    5. Desfazer (mostra o registro, uma espécie de log, das filas de atendimento; desfaz a última operação realizada para montagem da fila de atendimento; e informa ao usuário a operação a ser desfeita e envia, com o mesmo, uma solicitação de confirmação;
+    6. Carregar/Salvar (lê um arquivo com os dados do paciente e carrega uma lista, salva arquivos com dados do paciente);
+    7. Sobre (exibe informações dos desenvolvedores deste projeto).
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**#Metodologia:**
+  Será utilizado, dito anteriormente, a linguagem C. Farei uso do VSCode e também o onlinegdb, um Debugger online no próprio navegador. Além disso, para revisar todo conteúdo, os arquivos e atividades anteriors da matéria Estrutura de Dados.
