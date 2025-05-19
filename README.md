@@ -1,4 +1,4 @@
-# ProjetoEstruturaDados
+# ProjetoEstruturaDados - Gerenciamento de um sistema de saúde 🏥
 Projeto da matéria Estrutura de Dados - FEI 2025
 
 Início do projeto: 22/04/2025
