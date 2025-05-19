@@ -142,6 +142,56 @@ void menuPrioritario() {
     } while (opcao != 0);
 }
 
+// =================== ESTRUTURA DE ÁRVORE BINÁRIA DE BUSCA ===================== //
+typedef struct NodoABB {
+    Paciente* dados;
+    int chave;
+    struct NodoABB* esq;
+    struct NodoABB* dir;
+} NodoABB;
+
+NodoABB* raizAno = NULL;
+NodoABB* raizMes = NULL;
+NodoABB* raizDia = NULL;
+NodoABB* raizIdade = NULL;
+
+
+//Função genérica para inserção de chave:
+NodoABB* inserirPorChave(NodoABB* raiz, Paciente* p, int chave) {
+    if (raiz == NULL) {
+        NodoABB* novo = (NodoABB*) malloc(sizeof(NodoABB));
+        novo->dados = p;
+        novo -> chave = chave;
+        novo->esq = novo->dir = NULL;
+        return novo;
+    }
+
+    if (chave < chaveDoPaciente(raiz)) //Para pegar corretamente o mês, ano, dia e idade do paciente
+        raiz->esq = inserirPorChave(raiz->esq, p, chave);
+    else
+        raiz->dir = inserirPorChave(raiz->dir, p, chave);
+
+    return raiz;
+}
+
+//Função que extrai a chave corretamente do paciente:
+int chaveDoPaciente(NodoABB* nodo) {
+    return nodo->chave;
+}
+
+//Quarto item, exibição em ordem:
+void exibirEmOrdem(NodoABB* raiz) {
+    if (raiz == NULL) return;
+    exibirEmOrdem(raiz->esq);
+    Paciente* p = raiz->dados;
+    printf("Nome: %s | Idade: %d | RG: %s | Entrada: %02d/%02d/%04d\n",
+           p->nome, p->idade, p->rg,
+           p->entrada.dia, p->entrada.mes, p->entrada.ano);
+    exibirEmOrdem(raiz->dir);
+}
+
+
+
 // =================== FUNÇÕES DE LISTA (CADASTRO) ===================== //
 Paciente* criarPaciente() {
     Paciente* novo = (Paciente*) malloc(sizeof(Paciente));
@@ -380,6 +430,56 @@ void menuFila() {
     } while (opcao != 0);
 }
 
+//Função inserir árvore:
+void inserirNaArvore() {
+    char rg[15];
+    printf("Informe o RG do paciente: ");
+    fgets(rg, 15, stdin);
+    strtok(rg, "\n");
+
+    Paciente* p = buscarPorRG(rg);
+    if (!p) {
+        printf("Paciente nao encontrado.\n");
+        return;
+    }
+
+    raizAno   = inserirPorChave(raizAno, p, p->entrada.ano);
+    raizMes   = inserirPorChave(raizMes, p, p->entrada.mes);
+    raizDia   = inserirPorChave(raizDia, p, p->entrada.dia);
+    raizIdade = inserirPorChave(raizIdade, p, p->idade);
+
+    printf("Paciente inserido nas arvores de pesquisa.\n");
+}
+
+//Menu do item 4:
+void menuPesquisa() {
+    int opcao;
+    do {
+        printf("\n--- Menu de Pesquisa (Árvore Binária) ---\n");
+        printf("1. Inserir paciente na árvore\n");
+        printf("2. Mostrar por ano de entrada\n");
+        printf("3. Mostrar por mês de entrada\n");
+        printf("4. Mostrar por dia de entrada\n");
+        printf("5. Mostrar por idade\n");
+        printf("0. Voltar ao menu principal\n");
+        printf("Escolha: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+            case 1: inserirNaArvore(); break;
+            case 2: exibirEmOrdem(raizAno); break;
+            case 3: exibirEmOrdem(raizMes); break;
+            case 4: exibirEmOrdem(raizDia); break;
+            case 5: exibirEmOrdem(raizIdade); break;
+            case 0: break;
+            default: printf("Opcao invalida.\n");
+        }
+    } while (opcao != 0);
+}
+
+
+
 // =================== FUNÇÃO PRINCIPAL ===================== //
 int main() {
     int opcao;
@@ -388,6 +488,7 @@ int main() {
         printf("1. Cadastro de pacientes\n");
         printf("2. Atendimento (fila comum)\n");
         printf("3. Atendimento prioritario (heap)\n");
+        printf("4. Pesquisa (árvore binária)\n"); 
         printf("0. Sair\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
@@ -397,6 +498,7 @@ int main() {
             case 1: menuCadastro(); break;
             case 2: menuFila(); break;
             case 3: menuPrioritario(); break;
+            case 4: menuPesquisa(); break;
             case 0: printf("Encerrando o programa...\n"); break;
             default: printf("Opcao invalida!\n");
         }
