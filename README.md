@@ -7,6 +7,7 @@ Início do projeto: 22/04/2025
 
 **#Introdução:**
   Este projeto será feito um simulador de um aplicativo para gerencimaneto de serviços de saúde em linguagem C. Neste aplicado será construído um menu com 7 itens, que são:
+  
     1. Cadastro (registrar novo paciente, consultar paciente, mostrar lista completa, atualizar dados de um paciente e excluir dados de um paciente);
     2. Atendimento, fila comum (enfileira nomes dos pacientes, desenfileira e exibe a fila atual);
     3. Atendimento, fila prioritária (possui as mesmas operações do item anterior, porém para pacientes com um mínimo de idade de 55 anos);
