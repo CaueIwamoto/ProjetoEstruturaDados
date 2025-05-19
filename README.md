@@ -20,3 +20,13 @@ Início do projeto: 22/04/2025
 
 **#Metodologia:**
   Será utilizado, dito anteriormente, a linguagem C. Farei uso do VSCode e também o onlinegdb, um Debugger online no próprio navegador. Além disso, para revisar todo conteúdo, os arquivos e atividades anteriors da matéria Estrutura de Dados.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**#Imagem código:**
+![Imagem_codigo](https://github.com/user-attachments/assets/2f9fc79d-51f9-41c2-acdb-afac6f02fa53)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**#Conclusão final:**
+  Durante o projeto, obtive a conclusão que foi um trabalho excelente e excepcional para a expansão na área de programação, ainda mais com a linguagem C. Pessoalmente, acho uma linguagem um pouco desafiadora e que se acomoda muito bem atualmente, comparando com outras linguagem de programação modernas.
